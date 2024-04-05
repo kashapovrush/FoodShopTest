@@ -1,6 +1,7 @@
 package com.kashapovrush.menu
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,7 +20,7 @@ import coil.compose.AsyncImage
 import com.kashapovrush.palette.R
 
 @Composable
-fun TopLine(paddingValues: PaddingValues) {
+fun TopLine(paddingValues: PaddingValues, click: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -30,7 +31,10 @@ fun TopLine(paddingValues: PaddingValues) {
         Box(
             modifier = Modifier
                 .height(44.dp)
-                .width(44.dp),
+                .width(44.dp)
+                .clickable {
+                    click()
+                },
             contentAlignment = Alignment.Center
         ) {
             Image(

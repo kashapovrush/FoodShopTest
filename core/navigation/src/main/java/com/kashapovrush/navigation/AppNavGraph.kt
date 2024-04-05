@@ -14,7 +14,8 @@ fun AppNavGraph(
     navHostController: NavHostController,
     splashScreenContent: @Composable () -> Unit,
     menuScreenContent: @Composable () -> Unit,
-    itemCardScreenContent: @Composable (Product) -> Unit
+    itemCardScreenContent: @Composable (Product) -> Unit,
+    cartScreenContent: @Composable () -> Unit
 ) {
 
     NavHost(navController = navHostController, startDestination = Screen.SplashScreen.route) {
@@ -25,6 +26,10 @@ fun AppNavGraph(
 
         composable(Screen.MenuScreen.route) {
             menuScreenContent()
+        }
+
+        composable(Screen.CartScreen.route) {
+            cartScreenContent()
         }
 
         composable(Screen.ItemCarScreen.route,

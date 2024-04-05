@@ -45,6 +45,7 @@ dependencies {
     implementation(project(":features-mobile:palette"))
     implementation(project(":features-mobile:common"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:database"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

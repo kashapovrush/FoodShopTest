@@ -56,10 +56,12 @@ dependencies {
     implementation(project(":features-mobile:itemcard"))
     implementation(project(":features-mobile:common"))
     implementation(project(":features-mobile:splashscreen"))
+    implementation(project(":features-mobile:cart"))
     implementation(project(":features-mobile:palette"))
     implementation(project(":core:navigation"))
     implementation(project(":core:network"))
     implementation(project(":core:utils"))
+    implementation(project(":core:database"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -86,4 +88,9 @@ dependencies {
     //Dagger2
     implementation ("com.google.dagger:dagger:2.48.1")
     kapt ("com.google.dagger:dagger-compiler:2.48.1")
+
+    //Room database
+    implementation ("androidx.room:room-runtime:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
 }

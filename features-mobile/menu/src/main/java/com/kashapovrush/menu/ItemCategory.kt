@@ -10,7 +10,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,7 +24,8 @@ import androidx.compose.ui.unit.sp
 import com.kashapovrush.common.model.Category
 
 @Composable
-fun ItemCategory(category: Category, state: MutableState<Int>, onChangedCategory: () -> Unit) {
+fun ItemCategory(category: Category, state: State<Int>, onChangedCategory: () -> Unit) {
+
 
     val modifier = if (state.value == category.id) {
         Modifier

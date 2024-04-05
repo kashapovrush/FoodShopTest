@@ -20,13 +20,13 @@ import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
     primary = Pink80,
-    secondary = PurpleGrey80,
+    secondary = Orange,
     tertiary = Pink80,
 )
 
 private val SplashScreenTheme = lightColorScheme(
     primary = Color(0xFFF15412),
-    secondary = PurpleGrey80,
+    secondary = Orange,
     tertiary = Pink80,
 )
 

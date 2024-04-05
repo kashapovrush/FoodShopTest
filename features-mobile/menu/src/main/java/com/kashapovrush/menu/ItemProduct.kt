@@ -16,8 +16,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,14 +25,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kashapovrush.common.model.Product
+import com.kashapovrush.common.viewmodel.MenuViewModel
 import com.kashapovrush.palette.R
 
 @Composable
 fun ItemProduct(
     product: Product,
+    viewModel: MenuViewModel,
     onClickToItemCard: () -> Unit
 ) {
-    
+
     Card(
         modifier = Modifier
             .width(165.dp)
@@ -96,10 +97,12 @@ fun ItemProduct(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    StateButton(product = product)
+                    StateButton(
+                        product = product,
+                        viewModel = viewModel
+                    )
                 }
             }
         }
     }
-
 }

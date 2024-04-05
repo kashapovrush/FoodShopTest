@@ -10,14 +10,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ProgressIndicatorDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -26,24 +32,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
 import com.kashapovrush.common.state.MenuState
 import com.kashapovrush.common.viewmodel.MenuViewModel
+import com.kashapovrush.database.ProductDao
 import com.kashapovrush.navigation.NavigationState
+import com.kashapovrush.navigation.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun MenuScreen(viewModel: MenuViewModel, owner: LifecycleOwner, navigationState: NavigationState) {
+fun MenuScreen(
+    viewModel: MenuViewModel,
+    owner: LifecycleOwner,
+    navigationState: NavigationState
+) {
+
+    Log.d("MainActivityTest", "Recomposition menu screen")
 
     CoroutineScope(Dispatchers.IO).launch {
         viewModel.getCategories()
         viewModel.getProducts()
     }
+
 
     val state = viewModel.state.observeAsState()
     val currentState = state.value
@@ -56,54 +71,93 @@ fun MenuScreen(viewModel: MenuViewModel, owner: LifecycleOwner, navigationState:
         mutableIntStateOf(8)
     }
 
+
     when (currentState) {
         is MenuState.ResultCategories -> {
             Scaffold(Modifier.fillMaxSize()) { paddingValues ->
                 Column {
-                    TopLine(paddingValues)
-                    LazyRow(
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                            .fillMaxWidth()
-                            .height(40.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(items = currentState.listCategories, key = { category ->
-                            category.id
-                        }) { category ->
-                            ItemCategory(category, enabledCategory) {
-                                enabledCategory.intValue = category.id
-                                categoryState.value = category.name
+                    Column(modifier = Modifier.weight(1f)) {
+                        TopLine(paddingValues) {
+                            navigationState.navigateTo(Screen.CartScreen.route)
+                        }
+                        LazyRow(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .fillMaxWidth()
+                                .height(40.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(items = currentState.listCategories, key = { category ->
+                                category.id
+                            }) { category ->
+
+
+                                ItemCategory(category, enabledCategory) {
+                                    enabledCategory.intValue = category.id
+                                    categoryState.value = category.name
+                                }
                             }
                         }
+                        val product = viewModel.products.observeAsState(mutableListOf())
+
+
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+
+                            items(product.value.filter { product ->
+                                product.categoryId == mapCategoryStringToCategoryInt(
+                                    categoryState.value
+                                )
+                            }) { product ->
+                                ItemProduct(product = product, viewModel = viewModel) {
+                                    navigationState.navigateToItemCardScreen(product)
+                                }
+
+
+                            }
+                        }
+
+                        viewModel.error.observe(owner) {
+                            Log.d("MainActivityTest", "error $it")
+                        }
+
                     }
-                    val product = viewModel.products.observeAsState(mutableListOf())
 
 
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
+                    if (false) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(72.dp)
+                                .padding(horizontal = 16.dp, vertical = 1.dp)
 
-                        items(product.value.filter { product ->
-                            product.categoryId == mapCategoryStringToCategoryInt(
-                                categoryState.value
-                            )
-                        }) { product ->
-                            ItemProduct(product = product) {
-                                navigationState.navigateToItemCardScreen(product)
+                        ) {
+                            Button(
+                                onClick = {
+
+                                }, modifier = Modifier
+                                    .height(48.dp)
+                                    .width(343.dp),
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+                            ) {
+                                Text(
+                                    text = "₽₽₽",
+                                    fontSize = 16.sp,
+                                    color = Color.White
+                                )
                             }
 
                         }
-                    }
-                    viewModel.error.observe(owner) {
-                        Log.d("MainActivityTest", "error $it")
-                    }
 
+                    }
                 }
 
             }
